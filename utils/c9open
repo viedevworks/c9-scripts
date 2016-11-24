@@ -1,0 +1,23 @@
+local FILE=$(cd "$(dirname "$1")"; pwd)/$(basename "$1")
+local name=${FILE//\//}
+
+if [ ! -e "$FILE" ]; then
+    echo "creating $FILE"
+    touch "$FILE" || sudo touch "$FILE" > /dev/null
+elif [ -f "$FILE" ]; then
+    :
+elif [ -h "$FILE" ]; then
+    FILE=$(readlink "$FILE")
+else
+    echo "can't edit $FILE"
+    exit -1
+fi
+local TMP_DIR=~/.c9/edit-tmp
+mkdir -p "$TMP_DIR"
+[ -z "$FILE" ] && cp "$FILE" "$TMP_DIR/$name"
+c9 open --wait "$TMP_DIR/$name" 
+if [ -e "$TMP_DIR/$name" ]; then
+    cat "$TMP_DIR/$name" | sudo tee "$FILE" > /dev/null
+    rm "$TMP_DIR/name"
+    ls -ladh "$FILE"
+fi
