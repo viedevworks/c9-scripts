@@ -33,3 +33,6 @@ fi
 if [ -d "$HOME/s3cmd" ] && ! pathContainsDirectory "$HOME/s3cmd"; then
     export PATH="$PATH:$HOME/s3cmd"
 fi
+
+#Fix nano scrolling bug caused by tmux on 256
+export TERM=screen
